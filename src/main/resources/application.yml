@@ -1,6 +1,21 @@
 spring:
   application:
     name: ola-maps-consumer
+  config:
+    import: classpath:application-secrets.yml
+  security:
+    oauth2:
+      client:
+        registration:
+          my-client:
+            client-id: ${secrets.client-id}
+            client-secret: ${secrets.client-secret}
+            authorization-grant-type: client_credentials
+            scope: openid
+            provider: my-provider
+        provider:
+          my-provider:
+            token-uri: https://account.olamaps.io/realms/olamaps/protocol/openid-connect/token
 
 server:
   port: 8090
