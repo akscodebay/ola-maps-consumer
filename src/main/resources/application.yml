@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: ola-maps-consumer
+
+server:
+  port: 8090
