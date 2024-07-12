@@ -1,4 +1,4 @@
-package com.olamaps.consumermaps.security;
+package com.olamaps.consumermaps.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
