@@ -1,5 +1,8 @@
 package com.olamaps.consumermaps.service;
 
+import com.olamaps.consumermaps.model.AutoCompleteRequest;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,12 +19,18 @@ public class MapsService {
         this.restTemplate = restTemplate;
     }
 
-    public String getAutoCompleteSuggestions(){
+    @CircuitBreaker(name = "breaker", fallbackMethod = "fallback")
+    @Retry(name = "try")
+    public String getAutoCompleteSuggestions(AutoCompleteRequest autoCompleteRequest) {
         String url = "https://api.olamaps.io/places/v1/autocomplete?input=kempe";
         HttpHeaders httpHeaders = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
         return response.getBody();
+    }
+
+    public String fallback(Throwable t) {
+        return "fallback";
     }
 
 }

@@ -19,3 +19,26 @@ spring:
 
 server:
   port: 8090
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      breaker:
+        registerHealthIndicator: true
+        sliding-window-size: 100
+        sliding-window-type: count_based
+        permitted-number-of-calls-in-half-open-state: 10
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state:
+          seconds: 30
+        failure-rate-threshold: 50
+        event-consumer-buffer-size: 10
+  retry:
+    instances:
+      try:
+        max-attempts: 3
+        wait-duration:
+          seconds: 3
+
+
+

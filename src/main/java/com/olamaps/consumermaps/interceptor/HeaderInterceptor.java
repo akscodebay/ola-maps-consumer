@@ -23,7 +23,7 @@ public class HeaderInterceptor implements ClientHttpRequestInterceptor {
     }
 
     @Override
-    public @NonNull ClientHttpResponse intercept(HttpRequest request, byte @NonNull [] body, ClientHttpRequestExecution execution) throws IOException {
+    public @NonNull ClientHttpResponse intercept(HttpRequest request, byte @NonNull [] body, @NonNull ClientHttpRequestExecution execution) throws IOException {
         request.getHeaders().setBearerAuth(auth2TokenService.getAccessToken());
         String requestId = UUID.randomUUID().toString();
         String correlationId = CorrelationId.getCorrelationId();

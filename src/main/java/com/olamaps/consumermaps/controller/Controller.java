@@ -1,11 +1,11 @@
 package com.olamaps.consumermaps.controller;
 
+import com.olamaps.consumermaps.model.AutoCompleteRequest;
 import com.olamaps.consumermaps.service.MapsService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1")
@@ -22,9 +22,9 @@ public class Controller {
         return new ResponseEntity<>("This is dummy home", HttpStatus.OK);
     }
 
-    @GetMapping("/places/auto-complete-suggestions")
-    public ResponseEntity<String> getAutoCompleteSuggestions(){
-        return new ResponseEntity<>(mapsService.getAutoCompleteSuggestions(), HttpStatus.OK);
+    @PostMapping("/places/auto-complete-suggestions")
+    public ResponseEntity<String> getAutoCompleteSuggestions(@Valid @RequestBody AutoCompleteRequest autoCompleteRequest){
+        return new ResponseEntity<>(mapsService.getAutoCompleteSuggestions(autoCompleteRequest), HttpStatus.OK);
     }
 
 }
