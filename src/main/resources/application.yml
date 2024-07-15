@@ -40,5 +40,8 @@ resilience4j:
         wait-duration:
           seconds: 3
 
+service-url:
+  places:
+    auto-complete: https://api.olamaps.io/places/v1/autocomplete
 
 
