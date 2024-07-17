@@ -1,9 +1,10 @@
 package com.olamaps.consumermaps.service;
 
+import com.olamaps.consumermaps.exception.AutoCompleteException;
 import com.olamaps.consumermaps.model.AutoCompleteRequest;
 import com.olamaps.consumermaps.model.AutoCompleteResponse;
+import com.olamaps.consumermaps.model.CorrelationId;
 import com.olamaps.consumermaps.restclient.AutoCompleteRestClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,9 +16,13 @@ public class MapsService {
         this.autoCompleteRestClient = autoCompleteRestClient;
     }
 
-    public ResponseEntity<AutoCompleteResponse> getAutoCompleteSuggestions(AutoCompleteRequest autoCompleteRequest) {
-        ResponseEntity<AutoCompleteResponse> response = autoCompleteRestClient.getAutoComplete(autoCompleteRequest);
-        return response;
+    public AutoCompleteResponse getAutoCompleteSuggestions(AutoCompleteRequest autoCompleteRequest) throws AutoCompleteException {
+        AutoCompleteResponse autoCompleteResponse = autoCompleteRestClient.getAutoComplete(autoCompleteRequest);
+        if (autoCompleteResponse == null) {
+            throw new AutoCompleteException("Auto complete response body is null");
+        }
+        autoCompleteResponse.setRequestId(CorrelationId.getCorrelationId());
+        return autoCompleteResponse;
     }
 
 

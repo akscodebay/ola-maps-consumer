@@ -1,13 +1,18 @@
 package com.olamaps.consumermaps.restclient;
 
+import com.olamaps.consumermaps.exception.AutoCompleteException;
 import com.olamaps.consumermaps.model.AutoCompleteRequest;
 import com.olamaps.consumermaps.model.AutoCompleteResponse;
+import com.olamaps.consumermaps.model.ErrorMessage;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,7 +33,7 @@ public class AutoCompleteRestClient {
 
     @CircuitBreaker(name = "breaker", fallbackMethod = "fallback")
     @Retry(name = "try")
-    public ResponseEntity<AutoCompleteResponse> getAutoComplete(AutoCompleteRequest autoCompleteRequest) {
+    public AutoCompleteResponse getAutoComplete(AutoCompleteRequest autoCompleteRequest) {
         UriComponentsBuilder uri = UriComponentsBuilder.fromHttpUrl(placesAutoCompleteUrl);
         uri.queryParam("input", autoCompleteRequest.getInput());
         if(!StringUtils.isEmpty(autoCompleteRequest.getOrigin()))
@@ -44,10 +49,10 @@ public class AutoCompleteRestClient {
         HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
         ResponseEntity<AutoCompleteResponse> response = restTemplate.exchange(url, HttpMethod.GET, entity,
                 new ParameterizedTypeReference<AutoCompleteResponse>() {});
-        return response;
+        return response.getBody();
     }
 
-    public ResponseEntity<String> fallback(Throwable t) {
-        return new ResponseEntity<>("fallback", HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorMessage> fallback(Throwable t) throws AutoCompleteException {
+        throw new AutoCompleteException(t.getMessage());
     }
 }

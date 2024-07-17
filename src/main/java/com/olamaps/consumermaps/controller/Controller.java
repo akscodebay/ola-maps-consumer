@@ -1,5 +1,6 @@
 package com.olamaps.consumermaps.controller;
 
+import com.olamaps.consumermaps.exception.AutoCompleteException;
 import com.olamaps.consumermaps.model.AutoCompleteRequest;
 import com.olamaps.consumermaps.model.AutoCompleteResponse;
 import com.olamaps.consumermaps.service.MapsService;
@@ -24,8 +25,8 @@ public class Controller {
     }
 
     @PostMapping("/places/auto-complete-suggestions")
-    public ResponseEntity<AutoCompleteResponse> getAutoCompleteSuggestions(@Valid @RequestBody AutoCompleteRequest autoCompleteRequest){
-        return new ResponseEntity<AutoCompleteResponse>(mapsService.getAutoCompleteSuggestions(autoCompleteRequest).getBody(), HttpStatus.OK);
+    public ResponseEntity<AutoCompleteResponse> getAutoCompleteSuggestions(@Valid @RequestBody AutoCompleteRequest autoCompleteRequest) throws AutoCompleteException {
+        return new ResponseEntity<>(mapsService.getAutoCompleteSuggestions(autoCompleteRequest), HttpStatus.OK);
     }
 
 }

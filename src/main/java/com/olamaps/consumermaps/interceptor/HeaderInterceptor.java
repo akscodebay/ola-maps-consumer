@@ -10,8 +10,10 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.UUID;
+
+import static com.olamaps.consumermaps.constant.Constant.CORRELATION_ID;
+import static com.olamaps.consumermaps.constant.Constant.REQUEST_ID;
 
 @Configuration
 public class HeaderInterceptor implements ClientHttpRequestInterceptor {
@@ -26,15 +28,10 @@ public class HeaderInterceptor implements ClientHttpRequestInterceptor {
     public @NonNull ClientHttpResponse intercept(HttpRequest request, byte @NonNull [] body, @NonNull ClientHttpRequestExecution execution) throws IOException {
         request.getHeaders().setBearerAuth(auth2TokenService.getAccessToken());
         String requestId = UUID.randomUUID().toString();
-        String correlationId = CorrelationId.getCorrelationId();
-        request.getHeaders().add("X-Request-Id", requestId);
-        if (Objects.isNull(correlationId)) {
-            correlationId = UUID.randomUUID().toString();
-            CorrelationId.setCorrelationId(correlationId);
-        }
-        request.getHeaders().add("X-Correlation-Id", correlationId);
+        request.getHeaders().add(REQUEST_ID, requestId);
+        request.getHeaders().add(CORRELATION_ID, CorrelationId.getCorrelationId());
         ClientHttpResponse response = execution.execute(request, body);
-        response.getHeaders().add("X-Correlation-Id", correlationId);
+        response.getHeaders().add(CORRELATION_ID, CorrelationId.getCorrelationId());
         return response;
     }
 }
