@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -60,6 +61,17 @@ public class RestExceptionHandler {
         errorMessage.setPath(request.getRequestURI());
         errorMessage.setStatus(String.valueOf(HttpStatus.BAD_REQUEST.value()));
         errorMessage.setMessage(Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage());
+        return new ResponseEntity<>(errorMessage, HttpStatus.valueOf(HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorMessage> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setTimestamp(LocalDateTime.now().toString());
+        errorMessage.setRequestId(request.getAttribute(REQUEST_ID).toString());
+        errorMessage.setPath(request.getRequestURI());
+        errorMessage.setStatus(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+        errorMessage.setMessage(ex.getMessage());
         return new ResponseEntity<>(errorMessage, HttpStatus.valueOf(HttpStatus.BAD_REQUEST.value()));
     }
 }

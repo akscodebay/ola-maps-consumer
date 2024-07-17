@@ -15,7 +15,12 @@ public class RequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        CorrelationId.setCorrelationId(UUID.randomUUID().toString());
+        if (request.getHeader(REQUEST_ID) == null) {
+            CorrelationId.setCorrelationId(UUID.randomUUID().toString());
+        }
+        else {
+            CorrelationId.setCorrelationId(request.getHeader(REQUEST_ID));
+        }
         request.setAttribute(REQUEST_ID, CorrelationId.getCorrelationId());
 
         filterChain.doFilter(request, servletResponse);

@@ -3,7 +3,6 @@ package com.olamaps.consumermaps.restclient;
 import com.olamaps.consumermaps.exception.AutoCompleteException;
 import com.olamaps.consumermaps.model.AutoCompleteRequest;
 import com.olamaps.consumermaps.model.AutoCompleteResponse;
-import com.olamaps.consumermaps.model.ErrorMessage;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +51,7 @@ public class AutoCompleteRestClient {
         return response.getBody();
     }
 
-    public ResponseEntity<ErrorMessage> fallback(Throwable t) throws AutoCompleteException {
+    public AutoCompleteResponse fallback(Throwable t) throws AutoCompleteException {
         throw new AutoCompleteException(t.getMessage());
     }
 }
