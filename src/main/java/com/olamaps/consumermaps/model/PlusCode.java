@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Location {
-    @JsonProperty("lat")
-    private double latitude;
-    @JsonProperty("lng")
-    private double longitude;
+public class PlusCode {
+    @JsonProperty("compound_code")
+    private String compoundCode;
+    @JsonProperty("global_code")
+    private String globalCode;
 }

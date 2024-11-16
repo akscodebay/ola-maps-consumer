@@ -1,9 +1,8 @@
 package com.olamaps.consumermaps.service;
 
 import com.olamaps.consumermaps.exception.AutoCompleteException;
-import com.olamaps.consumermaps.model.AutoCompleteRequest;
-import com.olamaps.consumermaps.model.AutoCompleteResponse;
-import com.olamaps.consumermaps.model.CorrelationId;
+import com.olamaps.consumermaps.model.*;
+import com.olamaps.consumermaps.restclient.AddressGeocodeRestClient;
 import com.olamaps.consumermaps.restclient.AutoCompleteRestClient;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +10,12 @@ import org.springframework.stereotype.Service;
 public class MapsService {
 
    private final AutoCompleteRestClient autoCompleteRestClient;
+   private final AddressGeocodeRestClient addressGeocodeRestClient;
 
-    public MapsService(AutoCompleteRestClient autoCompleteRestClient) {
+    public MapsService(AutoCompleteRestClient autoCompleteRestClient,
+                       AddressGeocodeRestClient addressGeocodeRestClient) {
         this.autoCompleteRestClient = autoCompleteRestClient;
+        this.addressGeocodeRestClient = addressGeocodeRestClient;
     }
 
     public AutoCompleteResponse getAutoCompleteSuggestions(AutoCompleteRequest autoCompleteRequest) throws AutoCompleteException {
@@ -23,6 +25,10 @@ public class MapsService {
         }
         autoCompleteResponse.setRequestId(CorrelationId.getCorrelationId());
         return autoCompleteResponse;
+    }
+
+    public GeocodeResponse getAddressGeocode(GeocodeRequest geocodeRequest) {
+        return addressGeocodeRestClient.getAddressGeocode(geocodeRequest);
     }
 
 

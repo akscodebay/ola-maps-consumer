@@ -43,5 +43,6 @@ resilience4j:
 service-url:
   places:
     auto-complete: https://api.olamaps.io/places/v1/autocomplete
+    geocode: https://api.olamaps.io/places/v1/geocode
 
 

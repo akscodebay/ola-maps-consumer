@@ -6,11 +6,9 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Geometry {
-    @JsonProperty("location")
-    private Coordinate location;
-    @JsonProperty("location_type")
-    private String locationType;
-    @JsonProperty("viewport")
-    private Viewport viewport;
+public class Viewport {
+    @JsonProperty("southwest")
+    private Coordinate southwest;
+    @JsonProperty("northeast")
+    private Coordinate northeast;
 }
